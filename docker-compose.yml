@@ -1,0 +1,34 @@
+version: "3.7"
+
+services:
+  progresstracker-backend:
+    image: progresstracker-backend
+    container_name: progresstracker-backend
+    ports:
+      - 5000:5000
+    networks:
+      - progresstracker
+    depends_on:
+      - progress-db
+
+  progress-db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5433:5432'
+    volumes:
+      - progress-db:/var/lib/postgresql/data
+    networks:
+      - progresstracker
+
+volumes:
+  progress-db:
+    driver: local
+
+networks:
+  progresstracker:
+    external:
+       name: progresstracker
